@@ -19,6 +19,10 @@ public class ParsedArtifactPath {
   @NotNull
   private final String myModule;
   @NotNull
+  private final String myProject;
+  @NotNull
+  private final String myBuild;
+  @NotNull
   private final String myRevision;
   @NotNull
   private final String myArtifactPath;
@@ -35,6 +39,15 @@ public class ParsedArtifactPath {
     myRevision = matcher.group(3);
     myArtifactPath = matcher.group(4);
     myBranch = matcher.group(5);
+    String[] moduleArray = myModule.split("_");
+    if(moduleArray.length == 2) {
+      myProject = moduleArray[0];
+      myBuild = moduleArray[1];
+    }
+    else {//TODO: handle trying each different _ to split on in case there is an _ in the Project/Build Name
+      myProject = "MYPROJECT";
+      myBuild = "MYBUILD";
+    }
   }
 
   @NotNull
@@ -53,8 +66,8 @@ public class ParsedArtifactPath {
   }
 
   public String getTorrentUrl(){
-    return String.format("%s/repository/download/%s/%s/%s%s",
-            myServerUrl, myModule, myRevision, getTorrentPath(),
+    return String.format("http://localhost:88/%s/%s/64/testfile1",
+            myProject, myBuild, myRevision, getTorrentPath(),
             myBranch == null ? "" : "?branch="+ myBranch);
   }
 
@@ -63,6 +76,6 @@ public class ParsedArtifactPath {
   }
 
   public String getRelativeLinkPath(){
-    return String.format("%s/%s/%s", myModule, myRevision, myArtifactPath);
+    return String.format("%s/%s/64/testfile1", myProject, myBuild, myRevision, myArtifactPath);
   }
 }

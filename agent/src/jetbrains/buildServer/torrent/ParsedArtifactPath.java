@@ -25,6 +25,8 @@ public class ParsedArtifactPath {
   @NotNull
   private final String myRevision;
   @NotNull
+  private final String myBuildNumber;
+  @NotNull
   private final String myArtifactPath;
   @Nullable
   private final String myBranch;
@@ -48,6 +50,7 @@ public class ParsedArtifactPath {
       myProject = "MYPROJECT";
       myBuild = "MYBUILD";
     }
+    myBuildNumber = myRevision.substring(0, myRevision.indexOf("."));
   }
 
   @NotNull
@@ -66,8 +69,8 @@ public class ParsedArtifactPath {
   }
 
   public String getTorrentUrl(){
-    return String.format("http://localhost:88/%s/%s/64/testfile1",
-            myProject, myBuild, myRevision, getTorrentPath(),
+    return String.format("http://localhost:88/%s/%s/%s/%s%s",
+            myProject, myBuild, myBuildNumber, myArtifactPath,
             myBranch == null ? "" : "?branch="+ myBranch);
   }
 
